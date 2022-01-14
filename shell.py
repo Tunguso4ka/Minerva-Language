@@ -2,7 +2,7 @@ import language, os
 #bool
 shell_stop = False
 #string
-shell_input_text = "\033[92m$ \033[0m"
+shell_input_text = "\033[92m~$ \033[0m"
 shell_command_name = "shell"
 #
 def shell_commands(lresult):
@@ -23,13 +23,15 @@ def shell_commands(lresult):
     language.linenum = 0
     language.add_code()
     os.system('clear')
-    print("Minerva Language", language.version, "\nshell commands: exit/stop run clear debug language input_text")
+    print("Minerva Language", language.version, "\nshell commands: exit/stop run clear debug language input_text info")
   elif lresult[1] == 'run':
     shell_commands([shell_command_name,'clear'])
     print(shell_input_text + lresult[0],lresult[1], lresult[2])
     language.run_file(lresult[2] + '.mlapp')
   elif lresult[1] == 'rename':
     shell_command_name = input('in:')
+  elif lresult[1] == 'info':
+    print('ML 220114.1:\nAdded:\nshell info\nmodules mathformulas getvalue\nUpdated:\nmodules boolformulas if int bool while write let')
 #
 def lex(result):
   lresult = result.split(' ')

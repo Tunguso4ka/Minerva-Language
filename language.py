@@ -3,8 +3,8 @@ from datetime import datetime
 #ints
 linenum = 0
 #strings
-version = "220111.1"
-digits = '0123456789'
+version = "220114.1"
+digits = '0123456789.'
 symbols = '+-*/!%<>=()[]:&|'
 #bools
 debug = False

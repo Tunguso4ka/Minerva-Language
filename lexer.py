@@ -72,7 +72,7 @@ def lex(lines, digits, symbols, dsymbols):
         cline.append('')
     #if i in digits then check for digits and add
     elif i in digits:
-      if cline[-2][-1] in digits or cline[-2] == '-':
+      if cline[-2][-1] in digits:
         cline[-2] = cline[-2] + i
       elif cline[-1] == '':
         cline[-1] = i
