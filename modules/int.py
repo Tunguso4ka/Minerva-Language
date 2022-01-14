@@ -1,3 +1,5 @@
+import modules.mathformulas, modules.getvalue
+
 class integer:
     def __init__(self, name, value):
         self.name = name
@@ -7,45 +9,60 @@ class integer:
         self.value = int(self.value)
 
 def main(pline, names, digits, symbols, dsymbols, levels, linenum):
-    equal_reached = False
-    result = 0
+    mathsymbols = ['+', '-', '*', '/', '%']
     namests = []
-    csmbls = ['=', '++', '--', '+=', '-=', '*=', '/=', '%=']
-    smbl = '='
+    type = "int"
+    symbol = '='
+    mathsymbol = 'a'
+    value = 0
+    aftersymbol = False
+    formulas = []
+    t = 1
     for i in pline[1:]:
-            if i in csmbls:
-                smbl = i
-                equal_reached = not equal_reached
-            elif equal_reached == False:
-                namests.append(i)
-            elif equal_reached == True:
-                if i[-1] in digits:
-                    result = int(i)
-                elif i in names:
-                    result = names[i].value
-    if smbl == '=':
+        if i in dsymbols or i == '=':
+            symbol = i
+            aftersymbol = True
+        elif aftersymbol == False:
+            namests.append(i)
+        elif i in mathsymbols:
+          mathsymbol = i
+          a = 0
+          if len(formulas) == 0:
+            type, a = modules.getvalue.main(pline[t-1], digits, names)
+            formulas.append(a)
+          formulas.append(pline[t])
+          type, a = modules.getvalue.main(pline[t+1], digits, names)
+          formulas.append(a)
+        else:
+            type, value = modules.getvalue.main(i, digits, names)
+        t += 1
+
+    if len(formulas) > 0:
+      value = modules.mathformulas.main(formulas)
+
+    if symbol == '=':
         for i in namests:
-            names[i] = integer(i, result)
-    elif smbl == '++':
+            names[i] = integer(i, value)
+    elif symbol == '++':
         for i in namests:
             names[i].value = names[i].value + 1
-    elif smbl == '--':
+    elif symbol == '--':
         for i in namests:
             names[i].value = names[i].value - 1
-    elif smbl == '+=':
+    elif symbol == '+=':
         for i in namests:
-            names[i].value = names[i].value + result
-    elif smbl == '-=':
+            names[i].value = names[i].value + value
+    elif symbol == '-=':
         for i in namests:
-            names[i].value = names[i].value - result
-    elif smbl == '*=':
+            names[i].value = names[i].value - value
+    elif symbol == '*=':
         for i in namests:
-            names[i].value = names[i].value * result
-    elif smbl == '/=':
+            names[i].value = names[i].value * value
+    elif symbol == '/=':
         for i in namests:
-            names[i].value = names[i].value / result
-    elif smbl == '%=':
+            names[i].value = names[i].value / value
+    elif symbol == '%=':
         for i in namests:
-            names[i].value = names[i].value % result
-
+            names[i].value = names[i].value % value
+    names[i].convert()
     return names, levels, linenum

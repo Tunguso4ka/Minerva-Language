@@ -1,3 +1,5 @@
+import modules.getvalue, modules.boolformulas
+
 class boolean:
     def __init__(self, name, value):
         self.name = name
@@ -12,26 +14,40 @@ class boolean:
 def main(pline, names, digits, symbols, dsymbols, levels, linenum):
     names['true'] = boolean('true', True)
     names['false'] = boolean('false', False)
+    boolsymbols = ['==', '!=', '&&', '||', '>', '<', '<=', '>=']
 
-    equal_reached = False
-    result = False
     namests = []
-    smbl = '='
+    type = "int"
+    symbol = '='
+    value = 0
+    aftersymbol = False
+    formulas = []
+    t = 1
     for i in pline[1:]:
-            if i == '=' or i == '!=':
-                smbl = i
-                equal_reached = not equal_reached
-            elif equal_reached == False:
-                namests.append(i)
-            elif equal_reached == True:
-                if i in names:
-                    result = names[i].value
+      if aftersymbol == False and i in ['=', '!=']:
+        symbol = i
+        aftersymbol = True
+      elif aftersymbol == False:
+        namests.append(i)
+      elif aftersymbol == True:
+        if i in boolsymbols:
+          a = 0
+          if len(formulas) == 0:
+            type, a = modules.getvalue.main(pline[t-1], digits, names)
+            formulas.append(a)
+          formulas.append(pline[t])
+          type, a = modules.getvalue.main(pline[t+1], digits, names)
+          formulas.append(a)
+        else:
+          type, value = modules.getvalue.main(i, digits, names)
+      t += 1
 
-            if smbl == '!=':
-                result = not result
+    if len(formulas) > 0:
+      value = modules.boolformulas.main(formulas)
 
     for i in namests:
-        names[i] = boolean(i, result)
-    if len(namests) == 0:
-      a = 0
+      if symbol == '!=':
+        names[i] = boolean(i, names[i].value != value)
+      elif symbol == '=':
+        names[i] = boolean(i, value)
     return names, levels, linenum

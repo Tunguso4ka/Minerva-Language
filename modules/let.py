@@ -1,4 +1,4 @@
-import modules.mathformulas
+import modules.mathformulas, modules.getvalue, modules.boolformulas
 
 class clet:
     def __init__(self, name, type, value):
@@ -18,59 +18,46 @@ class clet:
         elif self.type == 'float':
             self.value = float(self.value)
 
-def get_value(i, digits):
-  if '.' in i:
-    type = 'float'
-    value = float(i)
-  elif i[-1] in digits:
-    type = 'int'
-    value = int(i)
-  elif i[0] == '#':
-    type = 'str'
-    value = i[1:]
-  else:
-    type = names[i].type
-    value = names[i].value
-  return type, value
-
 def main(pline, names, digits, symbols, dsymbols, levels, linenum):
     names['true'] = clet('true', 'bool', True)
     names['false'] = clet('false', 'bool', False)
-
     mathsymbols = ['+', '-', '*', '/', '%']
+    boolsymbols = ['==', '!=', '&&', '||', '>', '<', '<=', '>=']
 
     namests = []
     type = "int"
     symbol = '='
-    mathsymbol = 'a'
     value = 0
     aftersymbol = False
+    usebool = False
     formulas = []
     t = 1
     for i in pline[1:]:
-        if i in dsymbols or i == '=':
+        if aftersymbol == False and (i in dsymbols or i == '='):
             symbol = i
             aftersymbol = True
         elif aftersymbol == False:
             namests.append(i)
-        elif i in mathsymbols:
-          mathsymbol = i
-          a = 0
-          if len(formulas) == 0:
-            type, a = get_value(pline[t-1], digits)
+        elif aftersymbol == True:
+          if i in mathsymbols or i in boolsymbols:
+            if i in boolsymbols:
+              usebool = True
+            a = 0
+            if len(formulas) == 0:
+              type, a = modules.getvalue.main(pline[t-1], digits, names)
+              formulas.append(a)
+            formulas.append(pline[t])
+            type, a = modules.getvalue.main(pline[t+1], digits, names)
             formulas.append(a)
-          formulas.append(pline[t])
-          type, a = get_value(pline[t+1], digits)
-          formulas.append(a)
-        else:
-            type, value = get_value(i, digits)
+          else:
+            type, value = modules.getvalue.main(i, digits, names)
         t += 1
 
     if len(formulas) > 0:
-      value = modules.mathformulas.main(formulas)
-
-    if type != 'str':
-      type, value = get_value(str(value), digits)
+      if usebool:
+        value = modules.boolformulas.main(formulas)
+      else:
+        value = modules.mathformulas.main(formulas)
 
     for i in namests:
         if symbol == '=':
@@ -86,7 +73,7 @@ def main(pline, names, digits, symbols, dsymbols, levels, linenum):
         elif symbol == '%=':
             names[i] = clet(i, type, names[i].value % value)
         elif symbol == '!=':
-            names[i] = clet(i, type, not value)
+            names[i] = clet(i, type, names[i].value != value)
         elif symbol == '<<':
             names[i] = clet(i, type, names[i].value << value)
         elif symbol == '>>':

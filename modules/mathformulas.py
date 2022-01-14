@@ -2,6 +2,8 @@ def solveformula(formula):
   if formula[1] == '+':
     return formula[0] + formula[2]
   elif formula[1] == '-':
+    if formula[0] in ['=', '+', '-', '*', '/', '%', 'Null']:
+      formula[0] = 0
     return formula[0] - formula[2]
   elif formula[1] == '*':
     return formula[0] * formula[2]
@@ -24,16 +26,16 @@ def lex(formula):
         biggestsymbol = i
     t += 1
 
-  print(formula)
+  #print(formula)
   formula[a] = solveformula([formula[a-1], formula[a], formula[a+1]])
   formula.pop(a+1)
   formula.pop(a-1)
-  print(formula)
+  #print(formula)
   return formula
 
 def main(formula):
   while len(formula) > 1:
-    print(len(formula))
+    #print(len(formula))
     formula = lex(formula)
   return formula[0]
 
