@@ -1,6 +1,20 @@
 # Minerva-Language
 a python-based language with Rust like syntaxis.
 
+##### How to run a Minerva Language?
+Terminal:
+```
+python3 shell.py
+```
+or by doubleclick on shell.py
+
+##### How to run a .mlapp app?
+to run a.mlapp in folder apps:
+write in Minerva Shell
+```
+shell run apps/a
+```
+
 ##### Hello, World! example:
 ```
 use write;
