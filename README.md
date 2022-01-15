@@ -23,11 +23,12 @@ write "Hello, World!";
 
 ##### while example:
 ```
-use let write while;
-let a = 5;
-while a != 0 {
-   write a " thanks for using Minerva Language!";
-   let a--;
+use let write while sleep;
+let a = 1000;
+while a >= 0 {
+  write a "- 7?";
+  let a-=7;
+  sleep 0.25;
 }
 ```
 
