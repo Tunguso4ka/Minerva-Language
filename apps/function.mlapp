@@ -1,0 +1,8 @@
+use write fn;
+
+fn a() {
+  write "write in a()";
+}
+
+write "write before a()";
+fn a();

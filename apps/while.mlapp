@@ -1,0 +1,7 @@
+use let write while sleep;
+let a = 1000;
+while a >= 0 {
+  write a "- 7?";
+  let a-=7;
+  sleep 0.25;
+}
