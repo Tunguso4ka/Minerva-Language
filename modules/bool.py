@@ -47,7 +47,7 @@ def main(pline, names, digits, symbols, dsymbols, levels, linenum):
 
     for i in namests:
       if symbol == '!=':
-        names[i] = boolean(i, names[i].value != value)
+        names[i] = boolean(i, not value)
       elif symbol == '=':
         names[i] = boolean(i, value)
     return names, levels, linenum

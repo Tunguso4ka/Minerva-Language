@@ -32,7 +32,9 @@ def main(pline, names, digits, symbols, dsymbols, levels, linenum):
           formulas.append(a)
       t += 1
 
-    name = pline[1] + pline[2] + pline[3];
+    name = ''
+    for i in pline[1:-1]:
+      name += i
     do = False
     if names[levels[-1]].do == True:
       do = modules.boolformulas.main(formulas);

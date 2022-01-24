@@ -73,7 +73,7 @@ def main(pline, names, digits, symbols, dsymbols, levels, linenum):
         elif symbol == '%=':
             names[i] = clet(i, type, names[i].value % value)
         elif symbol == '!=':
-            names[i] = clet(i, type, names[i].value != value)
+            names[i] = clet(i, type, not value)
         elif symbol == '<<':
             names[i] = clet(i, type, names[i].value << value)
         elif symbol == '>>':
