@@ -1,0 +1,65 @@
+use write fn if let while read;
+
+let LeftUp LeftCenter LeftDown CenterUp Center CenterDown RightUp RightCenter RightDown = "[ ]";
+let O = "[O]";
+let X = "[X]";
+let Win = 0;
+let TempChar = "[O]";
+let TempInt = 1;
+let Turn = true;
+
+write "TicTacToe on Minerva Language";
+
+fn Draw() {
+  write LeftUp CenterUp RightUp;
+  write LeftCenter Center RightCenter;
+  write LeftDown CenterDown RightDown;
+}
+
+fn CheckWin() {
+  if LeftUp == TempChar && CenterUp == TempChar && RightUp == TempChar { let Win = TempInt;}
+  if LeftCenter == TempChar && Center == TempChar && RightCenter == TempChar { let Win = TempInt;}
+  if LeftDown == TempChar && CenterDown == TempChar && RightDown == TempChar { let Win = TempInt;}
+  
+  if LeftUp == TempChar && LeftCenter == TempChar && LeftDown == TempChar { let Win = TempInt;}
+  if CenterUp == TempChar && Center == TempChar && CenterDown == TempChar { let Win = TempInt;}
+  if RightUp == TempChar && RightCenter == TempChar && RightDown == TempChar { let Win = TempInt;}
+  
+  if LeftUp == TempChar && Center == TempChar && RightDown == TempChar { let Win = TempInt;}
+  if RightUp == TempChar && Center == TempChar && LeftDown == TempChar { let Win = TempInt;}
+}
+
+fn Input() {
+  read TempInt;
+  if TempInt == 0 && LeftUp == "[ ]" { let LeftUp = TempChar;}
+  if TempInt == 1 && CenterUp == "[ ]" { let CenterUp = TempChar;}
+  if TempInt == 2 && RightUp == "[ ]" { let RightUp = TempChar;}
+  
+  if TempInt == 3 && LeftCenter == "[ ]" { let LeftCenter = TempChar;}
+  if TempInt == 4 && Center == "[ ]" { let Center = TempChar;}
+  if TempInt == 5 && RightCenter == "[ ]" { let RightCenter = TempChar;}
+  
+  if TempInt == 6 && LeftDown == "[ ]" { let LeftDown = TempChar;}
+  if TempInt == 7 && CenterDown == "[ ]" { let CenterDown = TempChar;}
+  if TempInt == 8 && RightDown == "[ ]" { let RightDown = TempChar;}
+}
+
+while Win == 0 {
+  fn Draw();
+  if Turn == true {
+    let TempChar = O;
+    fn Input();
+    let TempInt = 1;
+  }
+  if Turn == false {
+    let TempChar = X;
+    fn Input();
+    let TempInt = 2;
+  }
+  fn CheckWin();
+  let Turn != Turn;
+}
+
+fn Draw();
+if Win == 1 { write "O win!";}
+if Win == 2 { write "X win!";}

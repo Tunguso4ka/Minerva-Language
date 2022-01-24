@@ -1,0 +1,13 @@
+use list int write;
+
+int a = 34;
+int b = 1;
+int c = 87;
+list ls = a b c;
+write ls;
+
+int d = -4;
+list ls crop;
+list ls add d;
+write ls;
+write ls[0];
