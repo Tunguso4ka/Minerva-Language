@@ -3,9 +3,9 @@ from datetime import datetime
 #ints
 linenum = 0
 #strings
-version = "220114.1"
+version = "220124.1"
 digits = '0123456789.'
-symbols = '+-*/!%<>=()[]:&|'
+symbols = '+-*/!%<>=():&|'
 #bools
 debug = False
 stop = False
@@ -25,6 +25,7 @@ class ccode:
     self.do = True
     self.type = 'code'
   def level_end(self, names, levels, linenum):
+    show_error(names[levels[-1]], 'error"Trying to end code":}')
     return names, levels, linenum
 class template:
   def __init__(self, name, startPos, pos):
@@ -62,8 +63,7 @@ def execute_line(line):
   elif line[0] in modules:
     if names[levels[-1]].do:
       names, levels, linenum = modules[line[0]].main(line, names, digits, symbols, dsymbols, levels, linenum)
-  elif line[-1] == '{':
-    if names[levels[-1]].do == False:
+    elif line[-1] == '{':
       names['template'] = template('template', 0, linenum)
       levels.append('template')
   else:
@@ -80,7 +80,10 @@ def code_proccess(code):
     update_pos()
     if debug == True:
       print('\033[0m')
-      print(levels, names['code'].pos, names[levels[-1]].pos)
+      poss = ''
+      for i in levels:
+        poss += " " + str(names[i].pos)
+      print(levels, poss)
   #application ends
   time_end = datetime.now()
   secondsgone = time_end - time_start
@@ -98,5 +101,8 @@ def run_file(path):
   f.close()
   code = lexer.lex(lines, digits, symbols, dsymbols)
   if debug:
-    print(code)
+    a = 0
+    for i in code:
+      print(a, i)
+      a += 1
   code_proccess(code)

@@ -77,6 +77,8 @@ def lex(lines, digits, symbols, dsymbols):
       elif cline[-1] == '':
         cline[-1] = i
         cline.append('')
+      elif cline[-1][-1] == '[':
+        cline[-1] = cline[-1] + i
       else:
         cline.append(i)
         cline.append('')
