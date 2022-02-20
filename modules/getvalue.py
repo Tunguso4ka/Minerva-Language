@@ -21,11 +21,15 @@ def main(i, digits, names):
   elif i[0] == '#':
     type = 'str'
     value = i[1:]
-  elif i in names or i in ['true','false']:
+  elif i in names:
     type = names[i].type
     value = names[i].value
+  elif i in ['true','false']:
+    type = 'bool'
+    value = 'true' == i
   elif i in [True, False]:
     type = 'bool'
+    value = i
   elif i[-1] == ']':
     name, num = lexlist(i)
     type, value = names[name].get(num, digits, names)

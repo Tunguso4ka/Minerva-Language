@@ -31,7 +31,6 @@ def main(pline, names, digits, symbols, dsymbols, levels, linenum):
     aftersymbol = False
     usebool = False
     formulas = []
-    t = 1
     for i in pline[1:]:
         if aftersymbol == False and (i in dsymbols or i == '='):
             symbol = i
@@ -39,19 +38,13 @@ def main(pline, names, digits, symbols, dsymbols, levels, linenum):
         elif aftersymbol == False:
             namests.append(i)
         elif aftersymbol == True:
-          if i in mathsymbols or i in boolsymbols:
+          if i in boolsymbols or i in mathsymbols:
             if i in boolsymbols:
               usebool = True
-            a = 0
-            if len(formulas) == 0:
-              type, a = modules.getvalue.main(pline[t-1], digits, names)
-              formulas.append(a)
-            formulas.append(pline[t])
-            type, a = modules.getvalue.main(pline[t+1], digits, names)
-            formulas.append(a)
+            formulas.append(i)
           else:
-            type, value = modules.getvalue.main(i, digits, names)
-        t += 1
+            type, a = modules.getvalue.main(i, digits, names)
+            formulas.append(i)
 
     if len(formulas) > 0:
       if usebool:

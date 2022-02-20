@@ -13,12 +13,12 @@ def main(pline, names, digits, symbols, dsymbols, levels, linenum):
     result = ''
     namests = []
     for i in pline[1:]:
-            if i == '=':
-                equal_reached = not equal_reached
-            elif equal_reached == False:
-                namests.append(i)
-            elif equal_reached == True:
-                type, value = modules.getvalue.main(i, digits, names)
+      if i == '=':
+        equal_reached = not equal_reached
+      elif equal_reached == False:
+        namests.append(i)
+      elif equal_reached == True:
+        type, value = modules.getvalue.main(i, digits, names)
 
     for i in namests:
         names[i] = string(i, value)

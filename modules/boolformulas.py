@@ -1,21 +1,21 @@
 #a == a; a != a; a > a; a < a; a <= a; a >= a;
 def solveformula(formula):
-    if formula[1] == '==':
-        return formula[0] == formula[2]
-    elif formula[1] == '!=':
-        return formula[0] != formula[2]
-    elif formula[1] == '>':
-        return formula[0] > formula[2]
-    elif formula[1] == '<':
-        return formula[0] < formula[2]
-    elif formula[1] == '<=':
-        return formula[0] <= formula[2]
-    elif formula[1] == '>=':
-        return formula[0] >= formula[2]
-    elif formula[1] == '&&':
-        return formula[0] and formula[2]
-    elif formula[1] == '||':
-        return formula[0] or formula[2]
+  if formula[1] == '==':
+    return formula[0] == formula[2]
+  elif formula[1] == '!=':
+    return formula[0] != formula[2]
+  elif formula[1] == '>':
+    return formula[0] > formula[2]
+  elif formula[1] == '<':
+    return formula[0] < formula[2]
+  elif formula[1] == '<=':
+    return formula[0] <= formula[2]
+  elif formula[1] == '>=':
+    return formula[0] >= formula[2]
+  elif formula[1] == '&&':
+    return formula[0] and formula[2]
+  elif formula[1] == '||':
+    return formula[0] or formula[2]
 
 def lex(formula):
   biggestsymbol = ''
@@ -42,4 +42,5 @@ def main(formula):
   while len(formula) > 1:
     #print(len(formula))
     formula = lex(formula)
+  #print(formula)
   return formula[0]

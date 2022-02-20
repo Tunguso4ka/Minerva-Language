@@ -9,7 +9,7 @@ class whileloop:
         self.do = do
         self.type = 'while'
     def level_end(self, names, levels, linenum):
-      if self.do == True:
+      if self.do in [True, 'True', 'true', 1, '1']:
         linenum = self.startPos - 1
       levels.pop()
       return names, levels, linenum
@@ -17,24 +17,19 @@ class whileloop:
 def main(pline, names, digits, symbols, dsymbols, levels, linenum):
     boolsymbols = ['==', '!=', '&&', '||', '>', '<', '<=', '>=']
     formulas = []
-    t = 1
     for i in pline[1:]:
       if i == '{':
-        a = 0
+        break
+      elif i in boolsymbols:
+        formulas.append(i)
       else:
-        if i in boolsymbols:
-          a = 0
-          if len(formulas) == 0:
-            type, a = modules.getvalue.main(pline[t-1], digits, names)
-            formulas.append(a)
-          formulas.append(pline[t])
-          type, a = modules.getvalue.main(pline[t+1], digits, names)
-          formulas.append(a)
-      t += 1
+        type, a = modules.getvalue.main(i, digits, names)
+        formulas.append(i)
 
     name = ''
-    for i in pline[1:-1]:
-      name += i
+    for i in pline[0:-1]:
+      name += i + '_'
+    name = name[0:-1]
     do = False
     if names[levels[-1]].do == True:
       do = modules.boolformulas.main(formulas);

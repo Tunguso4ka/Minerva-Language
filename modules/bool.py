@@ -22,7 +22,6 @@ def main(pline, names, digits, symbols, dsymbols, levels, linenum):
     value = 0
     aftersymbol = False
     formulas = []
-    t = 1
     for i in pline[1:]:
       if aftersymbol == False and i in ['=', '!=']:
         symbol = i
@@ -31,16 +30,10 @@ def main(pline, names, digits, symbols, dsymbols, levels, linenum):
         namests.append(i)
       elif aftersymbol == True:
         if i in boolsymbols:
-          a = 0
-          if len(formulas) == 0:
-            type, a = modules.getvalue.main(pline[t-1], digits, names)
-            formulas.append(a)
-          formulas.append(pline[t])
-          type, a = modules.getvalue.main(pline[t+1], digits, names)
-          formulas.append(a)
+          formulas.append(i)
         else:
-          type, value = modules.getvalue.main(i, digits, names)
-      t += 1
+          type, a = modules.getvalue.main(i, digits, names)
+          formulas.append(i)
 
     if len(formulas) > 0:
       value = modules.boolformulas.main(formulas)
