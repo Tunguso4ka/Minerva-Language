@@ -1,9 +1,7 @@
-def main(pline, names, digits, symbols, dsymbols, levels, linenum):
-    result = 0
-    for i in pline[1:]:
-        if i in digits:
-          result = int(i)
-        elif i in names:
-          result = names[i].value
-    linenum = result
-    return names, levels, linenum
+import modules.notforuse.getvalue
+version = "220730.1"
+type = "tt_module"
+
+def main(values, names, levels, position):
+    for i in values: position = int(modules.notforuse.getvalue.get(i, names))
+    return None, names, levels, position - 1

@@ -1,0 +1,6 @@
+use(sleep, write, goto, int);
+int a = 0;
+sleep (1.0);
+write("wooooow", a);
+int a++;
+goto(2);

@@ -1,0 +1,9 @@
+use(int, while, write, solve, getlangvar, sleep);
+int a = 6;
+write("start of while");
+while(solve(a!=0)) {
+    write(a, getlangvar("levels"));
+    int a--;
+    sleep(1);
+}
+write("end of while");

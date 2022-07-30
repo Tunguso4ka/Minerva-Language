@@ -1,8 +1,0 @@
-use let write switch case;
-let a = 1;
-switch a
-{
-  case 0 { write a "== 0"; }
-  case 1 { write a "== 1"; }
-  case 2323235734 { write a "== some big numbers"; }
-}

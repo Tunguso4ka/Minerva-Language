@@ -1,0 +1,6 @@
+use(if, write);
+write("Before if");
+if true {
+    write("In if");
+}
+write("After if");

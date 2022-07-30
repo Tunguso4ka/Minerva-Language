@@ -1,46 +1,14 @@
-import modules.getvalue, modules.boolformulas
+import mtoken, modules.notforuse.getvalue
+version = "220730.1"
+type = "tt_module"
 
-class boolean:
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
-        self.type = "bool"
-    def convert(self):
-        if self.value == 'true':
-            self.value = True
-        else:
-            self.value = False
-
-def main(pline, names, digits, symbols, dsymbols, levels, linenum):
-    names['true'] = boolean('true', True)
-    names['false'] = boolean('false', False)
-    boolsymbols = ['==', '!=', '&&', '||', '>', '<', '<=', '>=']
-
-    namests = []
-    type = "int"
-    symbol = '='
-    value = 0
-    aftersymbol = False
-    formulas = []
-    for i in pline[1:]:
-      if aftersymbol == False and i in ['=', '!=']:
-        symbol = i
-        aftersymbol = True
-      elif aftersymbol == False:
-        namests.append(i)
-      elif aftersymbol == True:
-        if i in boolsymbols:
-          formulas.append(i)
-        else:
-          type, a = modules.getvalue.main(i, digits, names)
-          formulas.append(i)
-
-    if len(formulas) > 0:
-      value = modules.boolformulas.main(formulas)
-
-    for i in namests:
-      if symbol == '!=':
-        names[i] = boolean(i, not value)
-      elif symbol == '=':
-        names[i] = boolean(i, value)
-    return names, levels, linenum
+def main(values, names, levels, position):
+    variables=[]
+    symbol=' '
+    for i in values:
+        if i.value in ['=']: symbol = i
+        elif symbol == ' ': variables.append(i)
+    match symbol.type:
+        case "tt_equal": for i in variables: names[i.value] = mtoken.t('tt_bool', bool(modules.notforuse.getvalue.get(values[-1], names)))
+        case _: print(f'EE You cant use {symbol.type} with bool.')
+    return 0, names, levels, position

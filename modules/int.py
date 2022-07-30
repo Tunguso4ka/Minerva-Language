@@ -1,68 +1,22 @@
-import modules.mathformulas, modules.getvalue
+import mtoken, modules.notforuse.getvalue
+version = "220730.1"
+type = "tt_module"
 
-class integer:
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
-        self.type = "int"
-    def convert(self):
-        self.value = int(self.value)
-
-def main(pline, names, digits, symbols, dsymbols, levels, linenum):
-    mathsymbols = ['+', '-', '*', '/', '%']
-    namests = []
-    type = "int"
-    symbol = '='
-    mathsymbol = 'a'
-    value = 0
-    aftersymbol = False
-    formulas = []
-    t = 1
-    for i in pline[1:]:
-        if i in dsymbols or i == '=':
-            symbol = i
-            aftersymbol = True
-        elif aftersymbol == False:
-            namests.append(i)
-        elif i in mathsymbols:
-          mathsymbol = i
-          a = 0
-          if len(formulas) == 0:
-            type, a = modules.getvalue.main(pline[t-1], digits, names)
-            formulas.append(a)
-          formulas.append(pline[t])
-          type, a = modules.getvalue.main(pline[t+1], digits, names)
-          formulas.append(a)
-        else:
-            type, value = modules.getvalue.main(i, digits, names)
-        t += 1
-
-    if len(formulas) > 0:
-      value = modules.mathformulas.main(formulas)
-
-    if symbol == '=':
-        for i in namests:
-            names[i] = integer(i, value)
-    elif symbol == '++':
-        for i in namests:
-            names[i].value = names[i].value + 1
-    elif symbol == '--':
-        for i in namests:
-            names[i].value = names[i].value - 1
-    elif symbol == '+=':
-        for i in namests:
-            names[i].value = names[i].value + value
-    elif symbol == '-=':
-        for i in namests:
-            names[i].value = names[i].value - value
-    elif symbol == '*=':
-        for i in namests:
-            names[i].value = names[i].value * value
-    elif symbol == '/=':
-        for i in namests:
-            names[i].value = names[i].value / value
-    elif symbol == '%=':
-        for i in namests:
-            names[i].value = names[i].value % value
-    names[i].convert()
-    return names, levels, linenum
+def main(values, names, levels, position):
+    variables=[]
+    symbol=' '
+    for i in values:
+        if i.value in ['=', '+=', '-=', '*=', '/=', '//=', '%=', '++', '--']: symbol = i
+        elif symbol == ' ': variables.append(i)
+    match symbol.type:
+        case "tt_equal": for i in variables: names[i.value] = mtoken.t('tt_int', int(modules.notforuse.getvalue.get(values[-1], names)))
+        case "tt_add_and_equal": for i in variables: names[i.value] = mtoken.t('tt_int', int(modules.notforuse.getvalue.get(names[i.value], names)) + int(modules.notforuse.getvalue.get(values[-1], names)))
+        case "tt_sub_and_equal": for i in variables: names[i.value] = mtoken.t('tt_int', int(modules.notforuse.getvalue.get(names[i.value], names)) - int(modules.notforuse.getvalue.get(values[-1], names)))
+        case "tt_mul_and_equal": for i in variables: names[i.value] = mtoken.t('tt_int', int(modules.notforuse.getvalue.get(names[i.value], names)) * int(modules.notforuse.getvalue.get(values[-1], names)))
+        case "tt_div_and_equal": for i in variables: names[i.value] = mtoken.t('tt_int', int(modules.notforuse.getvalue.get(names[i.value], names)) / int(modules.notforuse.getvalue.get(values[-1], names)))
+        case "tt_div_without_remaind_and_equal": for i in variables: names[i.value] = mtoken.t('tt_int', int(modules.notforuse.getvalue.get(names[i.value], names)) // int(modules.notforuse.getvalue.get(values[-1], names)))
+        case "tt_rem_and_equal": for i in variables: names[i.value] = mtoken.t('tt_int', int(modules.notforuse.getvalue.get(names[i.value], names)) % int(modules.notforuse.getvalue.get(values[-1], names)))
+        case "tt_increment": for i in variables: names[i.value] = mtoken.t('tt_int', int(modules.notforuse.getvalue.get(names[i.value], names)) + 1)
+        case "tt_decrement": for i in variables: names[i.value] = mtoken.t('tt_int', int(modules.notforuse.getvalue.get(names[i.value], names)) - 1)
+        case _: print(f'EE You cant use {symbol.type} with int.')
+    return None, names, levels, position

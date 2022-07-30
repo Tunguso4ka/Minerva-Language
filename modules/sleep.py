@@ -1,9 +1,10 @@
-import modules.getvalue
 from time import sleep as tsleep
-def main(pline, names, digits, symbols, dsymbols, levels, linenum):
-  result = '\033[0mout:\033[93m'
-  for i in pline[1:]:
-    type, value = modules.getvalue.main(i, digits, names)
+import modules.notforuse.getvalue
+version = "220730.1"
+type = "tt_module"
 
-  tsleep(value)
-  return names, levels, linenum
+def main(values, names, levels, position):
+    result = 0
+    for i in values: result = float(modules.notforuse.getvalue.get(i, names))
+    tsleep(result)
+    return 0, names, levels, position
