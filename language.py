@@ -1,108 +1,113 @@
-import lexer
 from datetime import datetime
-#ints
-linenum = 0
-#strings
-version = "220124.1"
-digits = '0123456789.'
-symbols = '+-*/!%<>=():&|'
-#bools
+
+position = 0
+version = "220425.1"
 debug = False
 stop = False
-#dicts
-modules = {}
 names = {}
-#lists
 levels = []
-dsymbols = ['++', '--', '+=', '-=', '==', '*=', '//', '/=', '>=', '<=', '!=', '%=', '&&','||', '<<', '>>']
-#code class
-class ccode:
-  def __init__(self, name, startPos, pos):
-    self.name = name
-    self.value = 0
-    self.startPos = startPos
-    self.pos = pos
-    self.do = True
-    self.type = 'code'
-  def level_end(self, names, levels, linenum):
-    show_error(names[levels[-1]], 'error"Trying to end code":}')
-    return names, levels, linenum
+
+class ccode():
+    def __init__(self, name, startpos=0, currentpos=0):
+        self.name = name
+        self.value = 0
+        self.startpos = startpos
+        self.currentpos = currentpos
+        self.do = True
+        self.type = 'code'
+    def level_end(self, names, levels, position):
+        show_error(names[levels[-1]], 'error"Trying to end code":}')
+        return names, levels, position
+
 class template:
-  def __init__(self, name, startPos, pos):
+  def __init__(self, name='template', startpos=position, currentpos=position):
     self.name = name
     self.value = 0
-    self.startPos = startPos
-    self.pos = pos
+    self.startpos = startpos
+    self.currentpos = currentpos
     self.do = False
-    self.type = 'code'
-  def level_end(self, names, levels, linenum):
+    self.type = 'template'
+  def level_end(self, names, levels, position):
     levels.pop()
-    return names, levels, linenum
-#
-def show_error(module, code):
-  print(f"\033[91mtype:{module.type} name:{module.name} pos:{module.pos} {code} \033[0m")
-#
+    return names, levels, position
+
 def add_code():
-  names['code'] = ccode('code', 0, linenum)
-  levels.append('code')
-add_code()
-#
-def update_pos():
-  global names
-  names[levels[-1]].pos = linenum
-#
+    names['code'] = ccode('code', 0, position)
+    levels.append('code')
+    names['use'] = __import__('modules.usemodule', fromlist = [' '])
+
+def show_error(module, code):
+  print(f"\033[91mEE type:{module.type} name:{module.name} pos:{module.currentpos} {code} \033[0m")
+
 def execute_line(line):
-  global modules, names, levels, linenum
-  if line[0] == 'use':
-    for i in line[1:]:
-      modules[i] = __import__('modules.' + i, fromlist = [' '])
-  elif line[0] == '}':
-    names, levels, linenum = names[levels[-1]].level_end(names, levels, linenum)
-  elif line[0][0] == '#':
+    global names, levels, position, value
+    if names[levels[-1]].do != True:
+        match line[-1].value:
+            case '{':
+                levels.append(template('skip'))
+            case '}':
+                levels.pop()
+    elif line[-1].value == '}':
+        names, levels, position = names[levels[-1]].level_end(names, levels, position)
+    elif names[line[0].value].type in ["tt_module"]:
+        execute_module(line)
+    else:
+        show_error('code', f"{line[0]} not in names. To add {line[0]} to the names write 'use {line[0]};'")
+
+#write(read());
+#char a = read();
+#if 5 == 2 + 3 == 5 {} => if formulas([5 == 2 + 3 == 5]) {}
+
+def execute_module(gline):
+    global names, levels, position
+    line = []
+    for i in gline:
+        line.append(i)
+    num = []
+    f = 0
+    while len(line) > f:
+        if line[f].type == 'tt_module' and line[f+1].type in ['tt_int', 'tt_float', 'tt_char', 'tt_bool', 'tt_unknown', 'tt_parenthes_open', 'tt_braces_open']:
+            num.append(f)
+        f+=1
     a = 0
-  elif line[0] in modules:
-    if names[levels[-1]].do:
-      names, levels, linenum = modules[line[0]].main(line, names, digits, symbols, dsymbols, levels, linenum)
-    elif line[-1] == '{':
-      names['template'] = template('template', 0, linenum)
-      levels.append('template')
-  else:
-    show_error(names[levels[-1]], f'error"Unknown module":{line[0]}')
-#
-def code_proccess(code):
-  global linenum
-  time_start = datetime.now()
-  #application starts
-  while linenum != len(code) and stop == False:
-    execute_line(code[linenum])
-    #print(code[linenum])
-    linenum += 1
-    update_pos()
-    if debug == True:
-      print('\033[0m')
-      poss = ''
-      for i in levels:
-        poss += " " + str(names[i].pos)
-      print(levels, poss)
-  #application ends
-  time_end = datetime.now()
-  secondsgone = time_end - time_start
-  if debug:
-    print("\033[92m$ml Finished in", secondsgone, "\033[0m")
-#
-def lex(line):
-  code = lexer.lex([line], digits, symbols, dsymbols)
-  #print(code)
-  code_proccess(code)
-#
-def run_file(path):
-  f = open(path)
-  lines = f.readlines()
-  f.close()
-  code = lexer.lex(lines, digits, symbols, dsymbols)
-  if debug:
-    a = 0
-    for i in code:
-      print(a, i)
-      a += 1
-  code_proccess(code)
+    while len(num) > 0:
+        if debug:
+            print('NUM:', num)
+            print("START", position)
+            for i in line:
+                print(i.type, i.value)
+            print("END")
+            
+        f = num[-1]
+        a = i = f+1
+        while len(line) > i:
+            if line[i].type in ['tt_parenthes_open']:
+                a = i + 1
+            elif line[i].type in ['tt_parenthes_close', 'tt_braces_open']:
+                break
+            elif line[i].value in ['=', '+=', '-=', '*=', '/=', '//=', '%=']:
+                i += 2
+                break
+            elif line[i].value in ['++', '--']:
+                i += 1
+                break
+            i += 1
+        value, names, levels, position = names[line[f].value].main(line[a:i], names, levels, position)
+        a = 0
+        while i > f:
+            line.pop(i)
+            i-=1
+            a+=1
+        if value != None:
+            line[f] = value
+        else:
+            line.pop(f)
+        num.pop()
+
+def execute_code(clines):
+    global position
+    position = 0
+    while len(clines) > position:
+        if debug: print(position, clines[position], levels)
+        execute_line(clines[position])
+        position += 1

@@ -1,51 +1,61 @@
-import language, os
-#bool
-shell_stop = False
-#string
-shell_input_text = "\033[92m~$ \033[0m"
-shell_command_name = "shell"
-#
-def shell_commands(lresult):
-  global shell_stop, shell_input_text, shell_command_name
-  if lresult[1] in ['exit', 'stop']:
-    shell_stop = True
-  elif lresult[1] == 'input_text':
-    shell_input_text = input('in:')
-  elif lresult[1] == 'language':
-    print(language.version)
-  elif lresult[1] == 'debug':
-    language.debug = not language.debug
-    print(language.debug)
-  elif lresult[1] == 'clear':
-    language.modules = {}
-    language.names = {}
-    language.levels = []
-    language.linenum = 0
-    language.add_code()
-    os.system('clear')
-    print("Minerva Language", language.version, "\nshell commands: exit/stop run clear debug language input_text info")
-  elif lresult[1] == 'run':
-    shell_commands([shell_command_name,'clear'])
-    print(shell_input_text + lresult[0],lresult[1], lresult[2])
-    language.run_file(lresult[2] + '.mlapp')
-  elif lresult[1] == 'rename':
-    shell_command_name = input('in:')
-  elif lresult[1] == 'info':
-    print('ML 220114.1:\nAdded:\nshell info\nmodules mathformulas getvalue\nUpdated:\nmodules boolformulas if int bool while write let')
-#
-def lex(result):
-  lresult = result.split(' ')
-  if lresult[0] == shell_command_name:
-    shell_commands(lresult)
-  else:
-    language.linenum = 0
-    language.lex(result)
-#
-def proccess():
-  while shell_stop == False:
-    result = input(shell_input_text)
-    lex(result)
-#start
-os.system('clear')
-print("Minerva Language", language.version, "\nshell commands: exit/stop run clear debug language input_text")
-proccess()
+import lexer, language, os, sys
+res = ''
+shl = '\033[92m~$ \033[0m'
+shlbasic = '\033[92m: \033[0m'
+shdbg = False
+version = "220416.1"
+
+def shcmds():
+    global res, shdbg
+    res = res.split(' ')
+    for i in res:
+        i = str(i)
+        i = i.split('=')
+        match i[0]:
+            case 'debug':
+                if i[1] == 'true': language.debug = lexer.debug = shdbg = True
+                else: language.debug = lexer.debug = shdbg = False
+                if shdbg: print(shdbg, lexer.debug, language.debug)
+            case 'exit':
+                res = 'c'
+            case 'clear':
+                os.system('clear')
+            case 'info':
+                print('ml-shell 220416.1:\nAdded:\ngetmoduleversion lexer language ml-shell\nUpdated:\nlexer language modules')
+            case 'version':
+                print(f'main files: ml-shell({version}), language({language.version}), lexer({lexer.version})')
+                line = 'used modules: '
+                for i in language.names:
+                    f = language.names[i]
+                    if f.type == 'tt_module':
+                        line += f"{i}({f.version}) "
+                print(line)
+            case 'run':
+                f = open(i[1]+'.minerva')
+                lines = f.readlines()
+                f.close()
+                language.execute_code(lexer.lex(lines))
+def sh():
+    global res
+    while res != 'c':
+        res = input(shl)
+        if 'shell' in res:
+            shcmds()
+        else:
+            #a = lexer.lex(res)
+            #for i in a:
+            #    print(modules.formulas.solve(i).value)
+            language.execute_code(lexer.lex(res))
+#START
+language.add_code()
+print(f'Minerva Language\nml-shell({version}), language({language.version}), lexer({lexer.version})\nshell commands: exit debug=true/false info clear version')
+#CHECK AND EXECUTE ARGUMENTS
+if len(sys.argv) > 0:
+    res = ''
+    for i in sys.argv[1:]:
+        res += str(i) + ' '
+    if shdbg:
+        print('arguments:', res)
+    shcmds()
+#START SH
+sh()
