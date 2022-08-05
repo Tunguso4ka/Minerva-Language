@@ -1,8 +1,12 @@
-import string, mtoken
+import mtoken
 from os.path import exists
 
 debug = False
-version = "220425.1"
+version = "2022.08.05.1"
+cyrillic_letters = 'АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯЫЭЁЪ'
+latin_letters = 'AÁBCČDĎEÉĚFGHIÍJKLMNŇOÓPQRŘSŠTŤUÚŮVWXYÝZŽ'
+cyrillic_letters += cyrillic_letters.lower()
+latin_letters += latin_letters.lower()
 
 def makesingleline(lines):
   line = ''
@@ -12,7 +16,6 @@ def makesingleline(lines):
   return line
 
 def lex(lines):
-  global string
   code = []
   cline = []
   instring = False
@@ -29,7 +32,7 @@ def lex(lines):
     elif f in "1234567890":
       number, i = makenumber(line, i)
       cline.append(number)
-    elif f in string.ascii_letters or f in '_':
+    elif f in latin_letters + cyrillic_letters or f in '_':
       unknown, i = makeunknown(line, i)
       cline.append(unknown)
     elif f in "{;":
@@ -126,11 +129,10 @@ def makenumber(line, i):
   return tokenize(type, number), i
 
 def makeunknown(line, i):
-  global string
   unknown = ""
   while i < len(line):
     f = line[i]
-    if not f in string.ascii_letters and not f in '_.':
+    if not f in latin_letters + cyrillic_letters and not f in '_.':
       i-=1
       break
     else:
