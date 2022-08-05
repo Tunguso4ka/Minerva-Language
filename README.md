@@ -4,7 +4,7 @@ a python-based language with Rust like syntaxis.
 ##### How to run a Minerva Language?
 Terminal:
 ```
-python shell.py
+python shell.py [args]
 ```
 or by doubleclick on shell.py
 
