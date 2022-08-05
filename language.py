@@ -35,6 +35,7 @@ def add_code():
     names['code'] = ccode('code', 0, position)
     levels.append('code')
     names['use'] = __import__('modules.usemodule', fromlist = [' '])
+    names['remove'] = __import__('modules.removemodule', fromlist = [' '])
 
 def show_error(type, module, code):
     examples = ['\033[91mEE', '\033[33mWW']
