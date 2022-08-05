@@ -8,4 +8,5 @@ def main(value, names, levels, position):
         case 'levels': result = levels
         case 'names': result = names
         case 'position': result = position
+        case _: result = 'None'
     return mtoken.t('tt_char', result), names, levels, position

@@ -1,8 +1,8 @@
-use(int, while, write, solve, getlangvar, sleep);
+use(int, while, write, solve, debug.getlangvar, sleep);
 int a = 6;
 write("start of while");
 while(solve(a!=0)) {
-    write(a, getlangvar("levels"));
+    write(a, debug.getlangvar("levels"));
     int a--;
     sleep(1);
 }

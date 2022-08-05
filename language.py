@@ -1,7 +1,7 @@
 from datetime import datetime
 
 position = 0
-version = "220425.1"
+version = "2022.07.31.1"
 debug = False
 stop = False
 names = {}
@@ -16,7 +16,7 @@ class ccode():
         self.do = True
         self.type = 'code'
     def level_end(self, names, levels, position):
-        show_error(names[levels[-1]], 'error"Trying to end code":}')
+        show_error('\033[91mEE', names[levels[-1]], 'error"Trying to end code":}')
         return names, levels, position
 
 class template:
@@ -36,8 +36,10 @@ def add_code():
     levels.append('code')
     names['use'] = __import__('modules.usemodule', fromlist = [' '])
 
-def show_error(module, code):
-  print(f"\033[91mEE type:{module.type} name:{module.name} pos:{module.currentpos} {code} \033[0m")
+def show_error(type, module, code):
+    examples = ['\033[91mEE', '\033[33mWW']
+    try: print(f"{type} type:'{module.type}' name:'{module.name}' pos:{module.currentpos} msg:'{code}' \033[0m")
+    except: print(f"{type} {module} {code} \033[0m")
 
 def execute_line(line):
     global names, levels, position, value
@@ -49,10 +51,10 @@ def execute_line(line):
                 levels.pop()
     elif line[-1].value == '}':
         names, levels, position = names[levels[-1]].level_end(names, levels, position)
-    elif names[line[0].value].type in ["tt_module"]:
+    elif line[0].value in names and  names[line[0].value].type in ["tt_module"]:
         execute_module(line)
     else:
-        show_error('code', f"{line[0]} not in names. To add {line[0]} to the names write 'use {line[0]};'")
+        show_error('\033[33mWW', names['code'], f"{line[0].value} not found in names.'")
 
 #write(read());
 #char a = read();
@@ -66,7 +68,7 @@ def execute_module(gline):
     num = []
     f = 0
     while len(line) > f:
-        if line[f].type == 'tt_module' and line[f+1].type in ['tt_int', 'tt_float', 'tt_char', 'tt_bool', 'tt_unknown', 'tt_parenthes_open', 'tt_braces_open']:
+        if line[f].type in ['tt_module', 'tt_unknown'] and line[f+1].type in ['tt_int', 'tt_float', 'tt_char', 'tt_bool', 'tt_unknown', 'tt_parenthes_open', 'tt_braces_open']:
             num.append(f)
         f+=1
     a = 0
