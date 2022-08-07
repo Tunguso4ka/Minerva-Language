@@ -1,0 +1,9 @@
+use(switch, case, write);
+switch "a" {
+	case "a" {
+		write("case A");
+	}
+	case "b" {
+		write("case B");
+	}
+}

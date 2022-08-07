@@ -1,0 +1,4 @@
+use(write);
+write("something");
+use(print=write);
+print("something");
