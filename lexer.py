@@ -132,7 +132,7 @@ def makeunknown(line, i):
   unknown = ""
   while i < len(line):
     f = line[i]
-    if not f in latin_letters + cyrillic_letters and not f in '_.':
+    if not f in latin_letters + cyrillic_letters and not f in '_.' and not f in "0123456789":
       i-=1
       break
     else:
