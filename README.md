@@ -31,3 +31,16 @@ while (solve(a!=0) {
   sleep(1);
 }
 ```
+
+##### switch example:
+```
+use(switch, case, write);
+switch "a" {
+  case "a" {
+    write("case A");
+  }
+  case "b" {
+    write("case B");
+  }
+}
+```
