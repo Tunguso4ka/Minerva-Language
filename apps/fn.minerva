@@ -1,0 +1,8 @@
+use(fn, write);
+write("before assigning fn");
+fn (test) {
+	write("in fn");
+}
+write("after assigning fn and before calling it");
+test();
+write("end");

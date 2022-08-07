@@ -1,7 +1,7 @@
 from datetime import datetime
 
 position = 0
-version = "2022.07.31.1"
+version = "2022.08.07.1"
 debug = False
 stop = False
 names = {}
@@ -55,7 +55,7 @@ def execute_line(line):
     elif line[0].value in names and  names[line[0].value].type in ["tt_module"]:
         execute_module(line)
     else:
-        show_error('\033[33mWW', names['code'], f"{line[0].value} not found in names.'")
+        if not line[0].value in names: show_error('\033[33mWW', names['code'], f"{line[0].value} not found in names.'")
 
 #write(read());
 #char a = read();
@@ -108,9 +108,10 @@ def execute_module(gline):
         num.pop()
 
 def execute_code(clines):
-    global position
+    global position, names, levels
     position = 0
     while len(clines) > position:
         if debug: print(position, clines[position], levels)
         execute_line(clines[position])
+        names[levels[-1]].currentpos = position
         position += 1
