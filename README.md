@@ -12,13 +12,18 @@ or by doubleclick on shell.py
 to run a.minerva in folder apps:
 write in Minerva Shell
 ```
-shell run apps/a
+shell run=apps/a
 ```
 
 ##### Hello, World! example:
 ```
 use (write);
 write ("Hello, World!");
+```
+
+##### comment example:
+```
+#hello! Minerva supports comments like other normal languages.
 ```
 
 ##### while example:
@@ -43,4 +48,14 @@ switch "a" {
     write("case B");
   }
 }
+```
+
+##### fn example:
+```
+use(fn, write);
+fn (hello) {
+  write("hello Minerva!");
+}
+
+hello();
 ```
