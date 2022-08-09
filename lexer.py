@@ -11,8 +11,7 @@ latin_letters += latin_letters.lower()
 def makesingleline(lines):
   line = ''
   for i in lines:
-    if i[0] != '#':
-      line = line + i.strip('\n')
+    if i[0] != '#': line = line + i.strip('\n')
   return line
 
 def lex(lines):
@@ -81,15 +80,13 @@ def lex(lines):
 
     i+=1
 
-  if not cline == []:
-    code.append(cline)
+  if not cline == []: code.append(cline)
 
   if debug:
     print("LEXER")
     for i in code:
       line = ""
-      for f in i:
-        line += f"{f.type}:{str(f.value)} "
+      for f in i: line += f"{f.type}:{str(f.value)} "
       print(line)
     print("LEXER")
   return code
@@ -99,10 +96,8 @@ def makechars(line, i):
   i+=1
   while i < len(line):
     f = line[i]
-    if f == '"':
-      break
-    else:
-      chars += f
+    if f == '"': break
+    else: chars += f
     i+=1
   return tokenize("tt_char", chars), i
 
@@ -116,8 +111,7 @@ def makenumber(line, i):
       i-=1
       break
     else:
-      if f == '.':
-        isfloat = True
+      if f == '.': isfloat = True
       number += f
       i+=1
   
@@ -132,7 +126,7 @@ def makeunknown(line, i):
   unknown = ""
   while i < len(line):
     f = line[i]
-    if not f in latin_letters + cyrillic_letters and not f in '_.' and not f in "0123456789":
+    if not f in latin_letters + cyrillic_letters and not f in '_.0123456789':
       i-=1
       break
     else:

@@ -16,7 +16,7 @@ def shcmds():
                 if i[1] == 'true': language.debug = lexer.debug = shdbg = True
                 else: language.debug = lexer.debug = shdbg = False
                 if shdbg: print(shdbg, lexer.debug, language.debug)
-            case 'exit': res = 'c'
+            case 'exit': res = 'exit()'
             case 'clear': os.system('clear')
             case 'info': print('ml-shell 220416.1:\nAdded:\ngetmoduleversion lexer language ml-shell\nUpdated:\nlexer language modules')
             case 'version':
@@ -33,13 +33,13 @@ def shcmds():
                 language.execute_code(lexer.lex(lines))
 def sh():
     global res
-    while res != 'c':
+    while res != 'exit()':
         res = input(shl)
         if 'shell' in res:shcmds()
-        else: language.execute_code(lexer.lex(res))
+        elif res != 'exit()': language.execute_code(lexer.lex(res))
 #START
 language.add_code()
-print(f'Minerva Language\nml-shell({version}), language({language.version}), lexer({lexer.version})\nshell commands: exit debug=true/false info clear version')
+print(f'Minerva Language\nml-shell({version}), language({language.version}), lexer({lexer.version})\nshell commands: exit debug=true/false info clear version run=[path]')
 #CHECK AND EXECUTE ARGUMENTS
 if len(sys.argv) > 0:
     res = ''

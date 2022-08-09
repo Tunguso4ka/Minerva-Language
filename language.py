@@ -44,16 +44,14 @@ def show_error(type, module, code):
 
 def execute_line(line):
     global names, levels, position, value
-    if names[levels[-1]].do != True:
+    if names[levels[-1]].do == False:
         match line[-1].value:
             case '{':
-                levels.append(template('skip'))
-            case '}':
-                levels.pop()
-    elif line[-1].value == '}':
-        names, levels, position = names[levels[-1]].level_end(names, levels, position)
-    elif line[0].value in names and  names[line[0].value].type in ["tt_module"]:
-        execute_module(line)
+                levels.append(f'skip-{position}')
+                names[f'skip-{position}'] = template(f'skip-{position}')
+            case '}': levels.pop()
+    elif line[-1].value == '}': names, levels, position = names[levels[-1]].level_end(names, levels, position)
+    elif line[0].value in names and  names[line[0].value].type in ["tt_module"]: execute_module(line)
     else:
         if not line[0].value in names: show_error('\033[33mWW', names['code'], f"{line[0].value} not found in names.'")
 
@@ -64,30 +62,25 @@ def execute_line(line):
 def execute_module(gline):
     global names, levels, position
     line = []
-    for i in gline:
-        line.append(i)
+    for i in gline: line.append(i)
     num = []
     f = 0
     while len(line) > f:
-        if line[f].type in ['tt_module', 'tt_unknown'] and line[f+1].type in ['tt_int', 'tt_float', 'tt_char', 'tt_bool', 'tt_unknown', 'tt_parenthes_open', 'tt_braces_open']:
-            num.append(f)
+        if line[f].type in ['tt_module', 'tt_unknown'] and line[f+1].type in ['tt_int', 'tt_float', 'tt_char', 'tt_bool', 'tt_unknown', 'tt_parenthes_open', 'tt_braces_open']: num.append(f)
         f+=1
     a = 0
     while len(num) > 0:
         if debug:
             print('NUM:', num)
             print("START", position)
-            for i in line:
-                print(i.type, i.value)
+            for i in line: print(i.type, i.value)
             print("END")
             
         f = num[-1]
         a = i = f+1
         while len(line) > i:
-            if line[i].type in ['tt_parenthes_open']:
-                a = i + 1
-            elif line[i].type in ['tt_parenthes_close', 'tt_braces_open']:
-                break
+            if line[i].type in ['tt_parenthes_open']: a = i + 1
+            elif line[i].type in ['tt_parenthes_close', 'tt_braces_open']: break
             elif line[i].value in ['=', '+=', '-=', '*=', '/=', '//=', '%=']:
                 i += 2
                 break
@@ -101,10 +94,8 @@ def execute_module(gline):
             line.pop(i)
             i-=1
             a+=1
-        if value != None:
-            line[f] = value
-        else:
-            line.pop(f)
+        if value != None: line[f] = value
+        else: line.pop(f)
         num.pop()
 
 def execute_code(clines):
@@ -113,5 +104,5 @@ def execute_code(clines):
     while len(clines) > position:
         if debug: print(position, clines[position], levels)
         execute_line(clines[position])
-        names[levels[-1]].currentpos = position
+        if levels[-1] in names and names[levels[-1]].do: names[levels[-1]].currentpos = position
         position += 1

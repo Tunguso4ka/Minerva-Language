@@ -1,7 +1,12 @@
 use(fn, write);
 write("before assigning fn");
 fn (test) {
+	write("shit");
+	fn (stest) {
+		write("in fn in fn");
+	}
 	write("in fn");
+	stest();
 }
 write("after assigning fn and before calling it");
 test();
