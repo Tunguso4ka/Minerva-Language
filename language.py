@@ -50,7 +50,7 @@ def execute_line(line):
                 levels.append(f'skip-{position}')
                 names[f'skip-{position}'] = template(f'skip-{position}')
             case '}':
-                names.pop(levels[-1])
+                if levels[-1][:4] == 'skip': names.pop(levels[-1])
                 levels.pop()
     elif line[-1].value == '}': names, levels, position = names[levels[-1]].level_end(names, levels, position)
     elif line[0].value in names and  names[line[0].value].type in ["tt_module"]: execute_module(line)
