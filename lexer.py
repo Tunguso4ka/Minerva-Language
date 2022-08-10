@@ -83,12 +83,19 @@ def lex(lines):
   if not cline == []: code.append(cline)
 
   if debug:
-    print("LEXER")
+    print("LEXER STANDART")
+    a = 0
+    for i in code:
+        line = ""
+        for f in i: line += str(f.value) + ' '
+        print(a, line)
+        a += 1
+    print("LEXER STANDART\nLEXER TOKEN")
     for i in code:
       line = ""
       for f in i: line += f"{f.type}:{str(f.value)} "
       print(line)
-    print("LEXER")
+    print("LEXER TOKEN")
   return code
 
 def makechars(line, i):

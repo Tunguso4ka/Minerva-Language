@@ -18,6 +18,7 @@ def main(values, names, levels, position):
     name = f'case{str(position)}-{str(random.randint(0,999))}'
     if names[levels[-1]].type != 'switch': print('EE case must be in switch section')
     else: do = getvalue.get(names[levels[-1]], names) == getvalue.get(values[0], names)
+    #print(getvalue.get(names[levels[-1]], names), getvalue.get(values[0], names) ,do)
     names[name] = template(name, do, position, position)
     levels.append(name)
     return None, names, levels, position

@@ -1,4 +1,5 @@
 from datetime import datetime
+import random
 
 position = 0
 version = "2022.08.07.1"
@@ -47,8 +48,9 @@ def execute_line(line):
     if names[levels[-1]].do == False:
         match line[-1].value:
             case '{':
-                levels.append(f'skip-{position}')
-                names[f'skip-{position}'] = template(f'skip-{position}')
+                skip_name = f'skip-{position}-{random.randint(0, 1000)}'
+                levels.append(skip_name)
+                names[skip_name] = template(skip_name)
             case '}':
                 if levels[-1][:4] == 'skip': names.pop(levels[-1])
                 levels.pop()

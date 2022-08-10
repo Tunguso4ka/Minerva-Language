@@ -1,0 +1,5 @@
+use(solve, write, char);
+char t1, t2 = "[ ]";
+char t0 = "[X]";
+#write(solve(t0 == t1 && t1 == t2 && solve(t0 != "[ ]")));
+write(solve(t0 == t1 && t1 == t2 && t0 != "[ ]"));
