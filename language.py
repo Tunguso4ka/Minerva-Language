@@ -2,7 +2,7 @@ from datetime import datetime
 import random
 
 position = 0
-version = "2022.08.07.1"
+version = "2023.03.22.1"
 debug = False
 stop = False
 names = {}
@@ -35,8 +35,8 @@ class template:
 def add_code():
     names['code'] = ccode('code', 0, position)
     levels.append('code')
-    names['use'] = __import__('modules.usemodule', fromlist = [' '])
-    names['remove'] = __import__('modules.removemodule', fromlist = [' '])
+    names['use'] = __import__('modules.usemodule', fromlist = ['.'])
+    names['remove'] = __import__('modules.removemodule', fromlist = ['.'])
 
 def show_error(type, module, code):
     examples = ['\033[91mEE', '\033[33mWW']
@@ -85,17 +85,13 @@ def execute_module(gline):
         while len(line) > i:
             if line[i].type in ['tt_parenthes_open']: a = i + 1
             elif line[i].type in ['tt_parenthes_close', 'tt_braces_open']: break
-            elif line[i].value in ['=', '+=', '-=', '*=', '/=', '//=', '%=']:
-                i += 2
-                break
-            elif line[i].value in ['++', '--']:
-                i += 1
-                break
+            elif line[i].value in ['=', '+=', '-=', '*=', '/=', '//=', '%=']: i += 2
+            elif line[i].value in ['++', '--']: i += 1
             i += 1
         value, names, levels, position = names[line[f].value].main(line[a:i], names, levels, position)
         a = 0
         while i > f:
-            line.pop(i)
+            if len(line) > i: line.pop(i)
             i-=1
             a+=1
         if value != None: line[f] = value

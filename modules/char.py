@@ -1,10 +1,11 @@
 import mtoken, modules.notforuse.getvalue
-version = "220730.2"
+version = "2023.03.22.1"
 type = "tt_module"
 
 def main(values, names, levels, position):
     variables=[]
     symbol=' '
+    if values[-1].value == ';': values.pop()
     for i in values:
         if i.value in ['=', '+=', '-=', '*=', '/=', '//=', '%=']: symbol = i
         elif symbol == ' ': variables.append(i)

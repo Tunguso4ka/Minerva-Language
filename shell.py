@@ -1,4 +1,5 @@
 import os, sys, lexer, language
+
 res = ''
 shl = '\033[92m~$ \033[0m'
 shlbasic = '\033[92m: \033[0m'
@@ -34,12 +35,12 @@ def shcmds():
 def sh():
     global res
     while res != 'exit()':
-        res = input(shl)
+        res = input(shlbasic)
         if 'shell' in res:shcmds()
         elif res != 'exit()': language.execute_code(lexer.lex(res))
 #START
 language.add_code()
-print(f'Minerva Language\nml-shell({version}), language({language.version}), lexer({lexer.version})\nshell commands: exit debug=true/false info clear version run=[path]')
+if len(sys.argv) < 2: print(f'Minerva Language\nml-shell({version}), language({language.version}), lexer({lexer.version})\nshell commands: exit debug=true/false info clear version run=[path]')
 #CHECK AND EXECUTE ARGUMENTS
 if len(sys.argv) > 0:
     res = ''
